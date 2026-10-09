@@ -81,7 +81,7 @@ A powerful multi-agent research system built with LangChain that autonomously re
 
 ## 📋 Prerequisites
 
-- Python 3.11 or higher
+- Python 3.14.7 or higher
 - OpenAI API Key
 - Tavily API Key
 
@@ -101,14 +101,6 @@ cd LangChain-Multi-Agent-Research-System
 ```bash
 conda create -n langagent python=3.14.7 -y
 conda activate langagent
-```
-
-Or with venv:
-
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
 
 ### 3. Install Dependencies
 
@@ -121,15 +113,9 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```bash
-OPENAI_API_KEY=your_openai_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
 TAVILY_API_KEY=your_tavily_api_key_here
 ```
-
-Get your keys from:
-- [OpenAI API](https://platform.openai.com/api-keys)
-- [Tavily API](https://tavily.com)
-
----
 
 ## 💡 Usage
 
@@ -197,37 +183,7 @@ The system generates reports with:
 - Structured sections and proper formatting
 - Quality scores from 1-10
 
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- Built with [LangChain](https://langchain.com/)
-- Search powered by [Tavily](https://tavily.com)
-- UI built with [Streamlit](https://streamlit.io/)
-- Inspired by agentic AI research patterns
-
----
-
-## 📧 Support
-
-For support, open an issue on GitHub or contact the maintainers.
-
-**Happy Researching! 🚀**
