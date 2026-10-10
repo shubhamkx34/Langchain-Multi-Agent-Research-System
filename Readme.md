@@ -131,11 +131,8 @@ Then open `http://localhost:8501` in your browser.
 
 ```bash
 python main.py
+
 ```
-
-Edit the `topic` variable in `main.py` to research different topics.
-
----
 
 ## 📁 Project Structure
 
