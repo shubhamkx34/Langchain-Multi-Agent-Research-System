@@ -11,7 +11,7 @@ def run_research_pipeline(topic : str) -> dict:
 
     search_agent = build_search_agent()
     search_result = search_agent.invoke({
-        "messages" : [("user", f"Find recent, reliable and detailed information about: {topic}")]
+        "messages": [("user", f"Find recent, reliable and detailed information about: {topic}. You MUST use the 'web_search' tool. In your final output, you MUST explicitly copy the ENTIRE 'Top Target URLs for Deep Scraping' section AND the 'All Search Results & Snippets' section exactly as the tool provides them.")]
     })
     state["search_results"] = search_result['messages'][-1].content
 
@@ -26,16 +26,19 @@ def run_research_pipeline(topic : str) -> dict:
     reader_agent = build_reader_agent()
     reader_result = reader_agent.invoke({
         "messages": [("user",
-            f"Based on the following search results about '{topic}', "
-            f"pick the most relevant URL and scrape it for deeper content.\n\n"
+            f"From the search results below for '{topic}', locate the 'Top Target URLs for Deep Scraping'. "
+            f"You MUST use the 'scrape_url' tool to read them. "
+            f"CRITICAL INSTRUCTION: After the tool returns the text, you MUST write a detailed, multi-paragraph synthesis of the extracted information in your final response. Do not output raw HTML or empty text.\n\n"
             f"Search Results:\n{state['search_results']}"
         )]
     })
 
     state['scraped_content'] = reader_result['messages'][-1].content
 
+    # Fallback to ensure the pipeline doesn't break if the AI still returns a blank string
+    if not state['scraped_content'].strip():
+        state['scraped_content'] = "The Reader Agent failed to summarize the scraped content. Rely on the broad search snippets provided."
     print("\nscraped content: \n", state['scraped_content'])
-
 
     #step 3 - writer chain 
 
@@ -44,10 +47,9 @@ def run_research_pipeline(topic : str) -> dict:
     print("="*50)
 
     research_combined = (
-        f"SEARCH RESULTS : \n {state['search_results']} \n\n"
-        f"DETAILED SCRAPED CONTENT : \n {state['scraped_content']}"
+        f"SEARCH RESULTS (Broad Context) : \n {state['search_results']} \n\n"
+        f"DETAILED SCRAPED CONTENT (Deep Evidence) : \n {state['scraped_content']}"
     )
-
     state["report"] = writer_chain.invoke({
         "topic" : topic,
         "research" : research_combined
@@ -63,7 +65,7 @@ def run_research_pipeline(topic : str) -> dict:
     print("="*50)
 
     state["feedback"] = critic_chain.invoke({
-        "report":state['report']
+        "report": state['report']
     })
 
     print("\n critic report \n", state['feedback'])

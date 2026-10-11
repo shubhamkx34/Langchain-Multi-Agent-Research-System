@@ -15,16 +15,42 @@ search_tool = TavilySearch(max_results=5)
 
 @tool 
 def web_search(query:str)->str:
-     """Search the web for recent and reliable information on a topic . Returns Titles , URLs and snippets."""
-     output = search_tool.invoke(query)
+     """Search the web for recent information. Returns top target URLs for deep scraping and snippets for all results."""
+     results = search_tool.invoke(query)
+     pages = results.get("results", [])
 
-     out = []
-     for r in output['results']:
-        out.append(
-            f"Title: {r['title']}\nURL: {r['url']}\nSnippet: {r['content'][:300]}\n"
+    # Filter out direct PDF links
+     web_pages = [
+        r for r in pages
+        if not r["url"].lower().split("?")[0].endswith(".pdf")
+    ]
+     if not web_pages:
+        return "No valid web results found."
+
+     # Sort results by relevance score (highest to lowest)
+     web_pages.sort(key=lambda r: r.get("score", 0), reverse=True)
+
+    # Isolate the top 2 URLs for deep scraping
+     top_targets = web_pages[:2]
+
+     summary = [
+        f"Topic: {query}",
+        "--- Top Target URLs for Deep Scraping ---"
+    ]
+
+     for target in top_targets:
+        summary.append(f"URL: {target['url']} (Relevance Score: {target.get('score', 0):.2f})")
+
+        summary.append("\n--- All Search Results & Snippets (Broad Context) ---")
+ 
+    # Keep all snippets to provide broad context to the Writer Chain
+     for r in web_pages:
+        score_val = r.get('score', 0)
+        summary.append(
+            f"Title: {r['title']}\nURL: {r['url']}\nRelevance Score: {score_val:.2f}\nSnippet: {r['content'][:300]}\n"
         )
     
-     return "\n----\n".join(out)
+     return "\n".join(summary)
 
 # TOOL 2 - CONTENT SCRAPPER TOOL:  
 @tool
