@@ -479,7 +479,7 @@ if st.session_state.running and not st.session_state.done:
     topic_val = st.session_state.topic_input
 
     # ── Step 1: Search ──
-    with st.spinner("🔍 Search Agent is working…"):
+    with st.spinner(" Search Agent is working…"):
 
         search_agent = build_search_agent()
 
@@ -494,7 +494,7 @@ if st.session_state.running and not st.session_state.done:
         st.session_state.results = dict(results)
 
     # ── Step 2: Reader ──
-    with st.spinner("📄 Reader Agent is scraping top resources…"):
+    with st.spinner("Reader Agent is scraping top resources…"):
 
         reader_agent = build_reader_agent()
 
@@ -554,7 +554,7 @@ if r:
 
     # Raw outputs
     if "search" in r:
-        with st.expander("🔍 Search Results (raw)", expanded=False):
+        with st.expander("Search Results (raw)", expanded=False):
 
             st.markdown(
                 f'''
@@ -572,7 +572,7 @@ if r:
             )
 
     if "reader" in r:
-        with st.expander("📄 Scraped Content (raw)", expanded=False):
+        with st.expander("Scraped Content (raw)", expanded=False):
 
             st.markdown(
                 f'''
@@ -595,7 +595,7 @@ if r:
         st.markdown("""
         <div class="report-panel">
             <div class="panel-label orange">
-                📝 Final Research Report
+                Final Research Report
             </div>
         """, unsafe_allow_html=True)
 
@@ -617,7 +617,7 @@ if r:
         st.markdown("""
         <div class="feedback-panel">
             <div class="panel-label green">
-                🧐 Critic Feedback
+                Critic Feedback
             </div>
         """, unsafe_allow_html=True)
 
